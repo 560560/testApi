@@ -1,11 +1,20 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const WebSocket = require('ws');
 require('dotenv/config');
 
 const PORT = process.env.PORT || 4000;
 app.use(express.json());
 
+const wss = new WebSocket.Server({ port: 4080 })
+
+wss.on('connection', (ws) => {
+  ws.on('message', (message) => {
+    console.log(`Received message => ${message}`)
+  })
+  ws.send('ho!')
+})
 const todosRoute = require('./routes/todos');
 
 app.use('/', todosRoute);
